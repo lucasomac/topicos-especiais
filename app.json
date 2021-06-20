@@ -1,0 +1,12 @@
+{
+  "name": "topicos-especiais",
+  "displayName": "topicos-especiais",
+  "expo": {
+    "name": "topicos-especiais",
+    "slug": "topicos-especiais",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
