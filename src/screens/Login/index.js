@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {View, Text, TouchableOpacity, TextInput, Alert, Button} from 'react-native';
+import {View, Text, TouchableOpacity, TextInput, Alert} from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import Separator from '../../components/Separator';
 import styles from "./styles";
@@ -13,7 +13,6 @@ export default function Login({navigation}) {
     const [registeredPassword, setRegisteredPassword] = React.useState('');
     const [haveAccount, setHaveAccount] = React.useState(false);
 
-//{name: userName, phone: userPhone, email: userEmail, password: userPassword}
     async function getUserData() {
         let userData = await SecureStore.getItemAsync('userData');
         if (userData) {
@@ -127,7 +126,9 @@ export default function Login({navigation}) {
             <Separator marginVertical={30}/>
             <Text style={styles.textSimpleJustify}>Este aplicativo faz uso de armazenamento local com SecureStore e
                 AsyncStorage</Text>
-            <Button title='Deletar Conta' style={styles.button} onPress={handleDelete}/>
+            <TouchableOpacity style={styles.button} onPress={handleDelete}>
+                <Text style={styles.buttonText}>Deletar Contaa</Text>
+            </TouchableOpacity>
         </View>
     );
 }
