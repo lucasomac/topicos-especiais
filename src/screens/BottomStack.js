@@ -4,6 +4,7 @@ import React from "react";
 import Product from "./Product";
 import ProductList from "./ProductList";
 import MaterialIcons from "@expo/vector-icons";
+import Home from "./Home";
 
 const Tab = createMaterialBottomTabNavigator();
 export default function BottomStack({navigation, route}) {
