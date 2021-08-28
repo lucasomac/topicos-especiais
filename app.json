@@ -1,9 +1,7 @@
 {
-  "name": "topicos-especiais",
-  "displayName": "topicos-especiais",
   "expo": {
-    "name": "topicos-especiais",
-    "slug": "topicos-especiais",
+    "name": "applogin2",
+    "slug": "topicos-especiais-applogin2",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
