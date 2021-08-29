@@ -1,14 +1,14 @@
 import {createMaterialBottomTabNavigator} from "@react-navigation/material-bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import MaterialIcons from "@expo/vector-icons";
 import React from "react";
 import Product from "./Product";
 import ProductList from "./ProductList";
-import MaterialIcons from "@expo/vector-icons";
 import Home from "./Home";
 
 const Tab = createMaterialBottomTabNavigator();
 export default function BottomStack({navigation, route}) {
-    return (<Tab.Navigator initialRouteName="Home" activeColor="#FFFFFF" inactiveColor="#FFc300"
+    return (<Tab.Navigator initialRouteName="Home" activeColor="#FFFFFF" inactiveColor="#FFC300"
                            barStyle={{backgroundColor: '#E37D00'}}>
         <Tab.Screen name="Home" component={Home} options={{
             tabBarLabel: 'Home',
@@ -22,7 +22,8 @@ export default function BottomStack({navigation, route}) {
             tabBarLabel: 'Listar',
             tabBarIcon: ({color}) => <MaterialIcons name="list-all" color={color} size={26}/>
         }}/>
-    </Tab.Navigator>);
+    </Tab.Navigator>
+    );
 }
 const styles = StyleSheet.create({
     container: {

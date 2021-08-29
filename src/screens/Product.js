@@ -1,36 +1,43 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Alert, View, Text, TextInput, TouchableOpacity} from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Separator from "../components/Separator";
+import ProductModel from "../models/ProductModel";
 
-export default function Product({navigation}) {
+export default function Product({navigation, route}) {
     const [state, setState] = useState({
         productName: '', productPrice: '', productQty: ''
     });
     const handleChangeText = (key, value) => {
         setState({...this.state, [key]: value})
     }
+    let id = route.params ? route.params.id : undefined;
+    ;
+
+    useEffect(() => {
+        if (!route.params) return;
+        setState({
+            productName: route.params.name,
+            productPrice: route.params.price.toString(),
+            productQty: route.params.qty.toString()
+        });
+    }, [route]);
 
     async function handleSave() {
         if (!state.productName || !state.productPrice || !state.productQty) {
             Alert.alert('Erro ao tentar cadastrar produto:', 'Preencha todos os campos corretamente!')
         } else {
             const listItem = {
-                id: new Date().getTime(),
                 name: state.productName,
                 price: parseFloat(state.productPrice),
                 qty: parseInt(state.productQty)
             };
-            let savedProducts = [];
-            const response = await AsyncStorage.getItem('products');
-            if (response) savedProducts = JSON.parse(response);
-            savedProducts.push(listItem);
-            console.log(savedProducts); //comentar na 2
-            Alert.alert('Dados dos produtos:', 'Produto salvo com sucesso!');
-            await AsyncStorage.setItem('products', JSON.stringify(savedProducts));
-            setState({});
-            Alert.alert('Dados dos produtos:', 'Produto salvo com sucesso!');
-            navigation.navigate("ProductList");
+            ProductModel.saveItem(listItem, id).then(() => {
+                setState({});
+                Alert.alert('Dados dos produtos:', 'Produto salvo com sucesso!');
+            }).then(() =>
+                navigation.navigate("ProductList", listItem)).catch(() =>
+                Alert.alert('Erro ao tentar cadastrar o produto:', 'Erro no AsyncStorage'));
+            route.params = null;
         }
     }
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Button, Alert, Text, View} from 'react-native';
+import {Button, Alert, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {StatusBar} from 'expo-status-bar';
 import {NavigationContainer, getFocusedRouteNameFromRoute} from '@react-navigation/native';
@@ -7,6 +7,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import BottomStack from './src/screens/BottomStack';
+import {MaterialCommunityIcons} from "@expo/vector-icons";
 
 const Stack = createStackNavigator();
 
@@ -73,10 +74,8 @@ export default function App() {
                                             {cancelable: false}
                                         );
                                     }}
-                                    title="Sair"
-                                    style={{padding: 80}}
-                                    color="#D26900"
-                                />
+                                    style={{padding: 10}}>
+                                    <MaterialCommunityIcons name="exit-run" color="FFF" size={26}
                             ),
                             headerTitleStyle: {fontWeight: 'bold', textAlign: 'center'},
                         })}

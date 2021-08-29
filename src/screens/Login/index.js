@@ -4,23 +4,24 @@ import * as SecureStore from 'expo-secure-store';
 import Separator from '../../components/Separator';
 import styles from "./styles";
 import * as registredState from "react-native";
+import {useEffect, useState} from "react";
 
-
-export default function Login({navigation}) {
+export default function Login({navigation, route}) {
+    const [registeredState, setRegisteredState] = useState({
+        name: '',
+        phone: '',
+        email: '',
+        password: ''
+    });
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
-    const [registeredEmail, setRegisteredEmail] = React.useState('');
-    const [registeredName, setRegisteredName] = React.useState('');
-    const [registeredPassword, setRegisteredPassword] = React.useState('');
     const [haveAccount, setHaveAccount] = React.useState(false);
 
     async function getUserData() {
         let userData = await SecureStore.getItemAsync('userData');
         if (userData) {
-            setRegisteredName(JSON.parse(userData).name);
-            setRegisteredEmail(JSON.parse(userData).email);
             setEmail(JSON.parse(userData).email);
-            setRegisteredPassword(JSON.parse(userData).password);
+            setRegisteredState({...JSON.parse(userData)});
             setHaveAccount(true);
         } else {
             setHaveAccount(false);
@@ -28,45 +29,24 @@ export default function Login({navigation}) {
     }
 
     async function handleDelete() {
-        Alert.alert(
-            'Atenção!',
-            'Deseja deletar conta do aplicativo?',
-            [
-                {
-                    text: 'Sim',
-                    onPress: async () => {
-                        await SecureStore.deleteItemAsync('userData');
-                        navigation.replace('Login')
-                    },
-                },
-                {
-                    text: 'Não',
-                    onPress: () => console.log('Cancel Pressed'),
-                    style: 'cancel',
-                },
-            ],
-            {cancelable: false}
-        );
+        await SecureStore.deleteItemAsync(('userData'));
     }
 
-    React.useEffect(() => {
+    useEffect(() => {
         getUserData();
-
         const unsubscribe = navigation.addListener('focus', () => {
             getUserData();
         });
-
         return () => {
             unsubscribe;
         };
-
     }, [navigation]);
 
     function handleLogin() {
         if (email.length !== 0 && password.length !== 0) {
-            if (email === registeredEmail && password === registeredPassword) {
+            if (email === registeredState.email && password === registeredState.password) {
                 setPassword('');
-                global.nameLogin = registredState.name;
+                global.nameLogin = registeredState.name;
                 navigation.replace('BottomStack');
             } else {
                 Alert.alert(
@@ -88,9 +68,13 @@ export default function Login({navigation}) {
         navigation.navigate('Register');
     }
 
+    function handleDeleteRegister() {
+        SecureStore.deleteItemAsync('userData');
+    }
+
     return (
         <View style={styles.container}>
-            <Text style={styles.titleText}>App de Apês</Text>
+            <Text style={styles.titleText}>Secure Store App</Text>
             <TextInput
                 style={styles.input}
                 defaultValue={email}
@@ -122,14 +106,14 @@ export default function Login({navigation}) {
                     </TouchableOpacity></>) :
                 (<><Text style={styles.textSimple}>Já possuo uma conta, porém...</Text>
                     <TouchableOpacity style={styles.button}
-                                      onPress={() => Alert.alert('Informação:', `A sua senha foi enviada para o email cadastrado: ${registeredEmail} ${registeredPassword}`)}>
+                                      onPress={() => Alert.alert('Informação:', `A sua senha foi enviada para o email cadastrado: ${registeredState.email} ${registeredState.password}`)}>
                         <Text style={styles.buttonText}>Esqueci minha senha</Text>
                     </TouchableOpacity></>)}
             <Separator marginVertical={30}/>
             <Text style={styles.textSimpleJustify}>Este aplicativo faz uso de armazenamento local com SecureStore e
                 AsyncStorage</Text>
-            <TouchableOpacity style={styles.button} onPress={handleDelete}>
-                <Text style={styles.buttonText}>Deletar Contaa</Text>
+            <TouchableOpacity style={styles.button} onPress={handleDeleteRegister}>
+                <Text>Deletar Contaa</Text>
             </TouchableOpacity>
         </View>
     );

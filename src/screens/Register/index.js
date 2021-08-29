@@ -4,50 +4,66 @@ import * as SecureStore from 'expo-secure-store';
 
 import Separator from '../../components/Separator';
 import styles from "./styles";
+import {useState} from "react";
+import saveItem from "../../models/ProductModel";
 
-export default function Register({navigation: {navigate}}) {
-    const [userName, setUserName] = React.useState('');
-    const [userPhone, setUserPhone] = React.useState('');
-    const [userEmail, setUserEmail] = React.useState('');
-    const [userPassword, setUserPassword] = React.useState('');
+export default function Register({navigate}) {
+    const [state, setState] = useState({
+        userName: '',
+        userPhone: '',
+        userEmail: '',
+        userPassword: ''
+    });
+    const [userPasswordConfirm, setUserPasswordConfirm] = React.useState('');
 
     const setUserData = (userData) => {
         return SecureStore.setItemAsync('userData', JSON.stringify(userData));
     };
 
     function handleRegister() {
-        if (!userName || !userPhone || !userEmail || !userPassword) {
+        if (!state.userName || !state.userPhone || !ustate.serEmail || !state.userPassword) {
             Alert.alert(
                 'Erro ao tentar cadastrar usuário:',
                 'Preencha todos os campos corretamente!'
             );
         } else {
-            //Alert.alert('Credenciais', `E-mail: ${userEmail} \nSenha: ${userPassword}`);
-            setUserData({name: userName, phone: userPhone, email: userEmail, password: userPassword});
-            navigate('Login', {email: userEmail});
+            if (state.userPassword !== userPasswordConfirm) {
+                Alert.alert('Erro ao tentar cadastrar usuário:', 'Senha não confere com a confirmação da senha!');
+            } else {
+                saveUserData({
+                    name: state.userName,
+                    phone: state.userPhone,
+                    email: state.userEmail,
+                    password: state.userPassword
+                });
+                navigate('Login', {email: state.userEmail});
+            }
         }
     }
 
+    const handleChangeText = (key, value) => {
+        setState({...state, [key]: value});
+    }
     return (
         <View style={styles.container}>
             <Text style={styles.titleText}>Dados do Usuário</Text>
             <TextInput
                 style={styles.input}
-                value={userName}
-                onChangeText={(userName) => setUserName(userName)}
+                value={state.userName}
+                onChangeText={(value) => handleChangeText('username', value)}
                 placeholder={'Nome'}
             />
             <TextInput
                 style={styles.input}
-                value={userPhone}
-                onChangeText={(userPhone) => setUserPhone(userPhone)}
+                value={state.userPhone}
+                onChangeText={(value) => handleChangeText('userPhone', value)}
                 placeholder={'Telefone'}
                 keyboardType="numeric"
             />
             <TextInput
                 style={styles.input}
-                value={userEmail}
-                onChangeText={(userEmail) => setUserEmail(userEmail)}
+                value={state.userEmail}
+                onChangeText={(value) => setUserEmail('userEmail', value)}
                 placeholder={'E-mail'}
                 keyboardType="email-address"
                 textContentType="emailAddress"
@@ -55,7 +71,14 @@ export default function Register({navigation: {navigate}}) {
             />
             <TextInput
                 value={userPassword}
-                onChangeText={(userPassword) => setUserPassword(userPassword)}
+                onChangeText={(value) => handleChangeText('userPassword', value)}
+                placeholder={'Senha'}
+                secureTextEntry={true}
+                style={styles.input}
+            />
+            <TextInput
+                value={userPasswordConfirm}
+                onChangeText={(value) => handleChangeText('userPasswordConfirm', value)}
                 placeholder={'Senha'}
                 secureTextEntry={true}
                 style={styles.input}

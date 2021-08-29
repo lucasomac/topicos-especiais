@@ -2,7 +2,7 @@ import React from "react";
 import {View, Text, StyleSheet, TouchableOpacity, Alert} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function Home({navigation}) {
+export default function Home({navigation, route}) {
     async function handleProductsDelete() {
         try {
             await AsyncStorage.clear();
